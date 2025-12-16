@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Security Log Analyzer v2.0 | TheGhostPacket</title>
+    <title>Security Log Analyzer v2.5 Enhanced | TheGhostPacket</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -392,6 +392,235 @@
             font-weight: 500;
         }
 
+        /* NEW FEATURE 1: Example Log Buttons */
+        .example-logs-section {
+            margin-top: 0.875rem;
+        }
+
+        .example-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .example-buttons { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        .btn-example {
+            padding: 0.5rem 0.75rem;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            font-family: inherit;
+        }
+
+        .btn-example:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        /* NEW FEATURE 2: Timeline */
+        .timeline-container {
+            position: relative;
+            padding: 1rem 0;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .timeline-event {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .timeline-event:not(:last-child)::before {
+            content: '';
+            position: absolute;
+            left: 18px;
+            top: 40px;
+            bottom: -24px;
+            width: 2px;
+            background: var(--border);
+        }
+
+        .timeline-dot {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            z-index: 1;
+        }
+
+        .timeline-dot.critical { background: var(--danger); color: white; }
+        .timeline-dot.high { background: #ea580c; color: white; }
+
+        .timeline-content {
+            flex: 1;
+            background: var(--bg-tertiary);
+            padding: 0.875rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .timeline-time {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-ip {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* NEW FEATURE 3: Risk Score Breakdown */
+        .btn-risk-breakdown {
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .btn-risk-breakdown:hover i {
+            opacity: 1 !important;
+            color: var(--accent);
+        }
+
+        .risk-breakdown-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1001;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .risk-breakdown-modal.active { display: flex; }
+
+        .risk-breakdown-content {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .breakdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .breakdown-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--danger-bg);
+            color: var(--danger);
+        }
+
+        .breakdown-details { flex: 1; }
+        .breakdown-category { font-weight: 600; font-size: 0.85rem; }
+        .breakdown-count { font-size: 0.75rem; color: var(--text-secondary); }
+        .breakdown-points { font-size: 1.1rem; font-weight: 700; color: var(--danger); }
+
+        /* NEW FEATURE 4: Firewall Rules */
+        .firewall-alert {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: var(--warning-bg);
+            border: 1px solid var(--warning);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            color: var(--warning);
+            font-size: 0.85rem;
+        }
+
+        .firewall-alert i { font-size: 1.3rem; }
+
+        .firewall-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+            overflow-x: auto;
+        }
+
+        .firewall-tab {
+            padding: 0.625rem 1rem;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: -2px;
+            font-family: inherit;
+        }
+
+        .firewall-tab.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .firewall-tab:hover { color: var(--accent); }
+
+        .firewall-rules {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 0;
+        }
+
+        .firewall-rules code {
+            color: #e2e8f0;
+            display: block;
+            white-space: pre;
+        }
+
         /* Buttons */
         .btn {
             display: inline-flex;
@@ -450,6 +679,16 @@
         }
 
         @keyframes spin { to { transform: rotate(360deg); } }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideOut {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(100px); }
+        }
 
         /* Results */
         .results-section {
@@ -806,6 +1045,7 @@
             display: flex;
             align-items: center;
             gap: 0.3rem;
+            font-family: inherit;
         }
 
         .export-btn:hover {
@@ -860,7 +1100,7 @@
                     <div class="logo-icon"><i class="fas fa-shield-halved"></i></div>
                     <div class="logo-text">
                         <h1>Security Log Analyzer</h1>
-                        <span>v2.0 • Multi-Source Intelligence</span>
+                        <span>v2.5 Enhanced • Multi-Source Intelligence</span>
                     </div>
                 </div>
                 <div class="header-right">
@@ -871,7 +1111,7 @@
                         <div class="api-dot" data-name="GreyNoise"></div>
                     </div>
                     <div class="header-links">
-                        <a href="#" class="header-link" onclick="openIpLookup()">
+                        <a href="#" class="header-link" onclick="openIpLookup(); return false;">
                             <i class="fas fa-search"></i> IP Lookup
                         </a>
                         <a href="https://github.com/TheGhostPacket" target="_blank" class="header-link">
@@ -985,6 +1225,27 @@ Example:
                                 <i class="fas fa-eraser"></i> Clear
                             </button>
                         </div>
+                        
+                        <!-- NEW FEATURE 1: Example Log Buttons -->
+                        <div class="example-logs-section">
+                            <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+                                <i class="fas fa-flask"></i> Or try realistic attack scenarios:
+                            </p>
+                            <div class="example-buttons">
+                                <button class="btn-example" onclick="loadExampleLog('brute_force')">
+                                    <i class="fas fa-key"></i> Brute Force
+                                </button>
+                                <button class="btn-example" onclick="loadExampleLog('sql_injection')">
+                                    <i class="fas fa-database"></i> SQL Injection
+                                </button>
+                                <button class="btn-example" onclick="loadExampleLog('web_scanner')">
+                                    <i class="fas fa-radar"></i> Web Scanner
+                                </button>
+                                <button class="btn-example" onclick="loadExampleLog('mixed_attacks')">
+                                    <i class="fas fa-fire"></i> Mixed Attacks
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -1032,6 +1293,19 @@ Example:
                     <div class="stat-icon success"><i class="fas fa-key"></i></div>
                     <div class="stat-value" id="statBrute">0</div>
                     <div class="stat-label">Brute Force IPs</div>
+                </div>
+            </div>
+
+            <!-- NEW FEATURE 2: Attack Timeline -->
+            <div class="card" id="timelineCard" style="display: none;">
+                <div class="card-header">
+                    <div class="card-header-left">
+                        <i class="fas fa-clock-rotate-left"></i>
+                        <h3>Attack Timeline</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="attackTimeline" class="timeline-container"></div>
                 </div>
             </div>
 
@@ -1099,6 +1373,52 @@ Example:
                             </thead>
                             <tbody id="ipTableBody"></tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEW FEATURE 4: Firewall Rules Generator -->
+            <div class="card" id="firewallCard" style="display: none;">
+                <div class="card-header">
+                    <div class="card-header-left">
+                        <i class="fas fa-fire-flame-curved"></i>
+                        <h3>Automated Firewall Rules</h3>
+                    </div>
+                    <div class="export-buttons">
+                        <button class="export-btn" onclick="downloadFirewallRule('iptables')">
+                            <i class="fas fa-download"></i> iptables
+                        </button>
+                        <button class="export-btn" onclick="downloadFirewallRule('ufw')">
+                            <i class="fas fa-download"></i> UFW
+                        </button>
+                        <button class="export-btn" onclick="downloadFirewallRule('csf')">
+                            <i class="fas fa-download"></i> CSF
+                        </button>
+                        <button class="export-btn" onclick="downloadFirewallRule('fail2ban')">
+                            <i class="fas fa-download"></i> fail2ban
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="firewall-alert">
+                        <i class="fas fa-shield-halved"></i>
+                        <div>
+                            <strong>Ready to Block:</strong> <span id="firewallCount">0</span> malicious IPs detected
+                        </div>
+                    </div>
+                    
+                    <div class="firewall-tabs">
+                        <button class="firewall-tab active" onclick="showFirewallTab(event, 'iptables')">iptables</button>
+                        <button class="firewall-tab" onclick="showFirewallTab(event, 'ufw')">UFW</button>
+                        <button class="firewall-tab" onclick="showFirewallTab(event, 'csf')">CSF</button>
+                        <button class="firewall-tab" onclick="showFirewallTab(event, 'fail2ban')">fail2ban</button>
+                    </div>
+                    
+                    <div class="firewall-content">
+                        <pre id="firewallRulesDisplay" class="firewall-rules"><code></code></pre>
+                        <button class="btn btn-secondary btn-full" onclick="copyFirewallRules()" style="margin-top: 0.75rem;">
+                            <i class="fas fa-copy"></i> Copy to Clipboard
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1217,6 +1537,19 @@ Example:
         </div>
     </div>
 
+    <!-- NEW FEATURE 3: Risk Breakdown Modal -->
+    <div class="risk-breakdown-modal" id="riskBreakdownModal">
+        <div class="risk-breakdown-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-chart-line"></i> Risk Score Breakdown</h3>
+                <button class="modal-close" onclick="closeRiskBreakdown()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="riskBreakdownContent"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -1229,7 +1562,10 @@ Example:
         let selectedFile = null;
         let isLoading = false;
         let analysisResults = null;
+        let currentAnalysisResults = null; // For risk breakdown
         let charts = {};
+        let firewallRulesData = null;
+        let currentFirewallTab = 'iptables';
 
         // File handling
         const dropZone = document.getElementById('dropZone');
@@ -1282,6 +1618,41 @@ Example:
             return bytes + ' bytes';
         }
 
+        // NEW FEATURE 1: Load Example Logs
+        async function loadExampleLog(type) {
+            try {
+                const response = await fetch(`/api/example-logs/${type}`);
+                const data = await response.json();
+                document.getElementById('logContent').value = data.sample;
+                showToast(`Loaded ${type.replace(/_/g, ' ')} example`, 'success');
+            } catch (error) {
+                alert('Error loading example: ' + error.message);
+            }
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                background: ${type === 'success' ? '#10b981' : '#ef4444'};
+                color: white;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 10000;
+                animation: slideIn 0.3s ease-out;
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
         async function loadSampleLogs() {
             try {
                 const response = await fetch('/api/sample-logs');
@@ -1325,6 +1696,7 @@ Example:
                     alert(result.message);
                 } else {
                     analysisResults = result;
+                    currentAnalysisResults = result; // Store for risk breakdown
                     displayResults(result);
                 }
             } catch (error) {
@@ -1378,6 +1750,33 @@ Example:
             document.getElementById('statIPs').textContent = summary.unique_ips;
             document.getElementById('statBrute').textContent = summary.brute_force_ips;
 
+            // NEW FEATURE 2: Attack Timeline
+            if (result.timeline && result.timeline.length > 0) {
+                document.getElementById('timelineCard').style.display = 'block';
+                const timelineContainer = document.getElementById('attackTimeline');
+                
+                timelineContainer.innerHTML = result.timeline.map((event, index) => `
+                    <div class="timeline-event">
+                        <div class="timeline-dot ${event.severity}">
+                            ${event.severity === 'critical' ? '🚨' : '⚠️'}
+                        </div>
+                        <div class="timeline-content">
+                            <div class="timeline-time">${event.time || 'Unknown time'}</div>
+                            <div class="timeline-title">${event.description}</div>
+                            <div class="timeline-ip">IP: ${event.ip} • Type: ${event.type.replace(/_/g, ' ')}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // NEW FEATURE 4: Firewall Rules
+            if (result.firewall_rules) {
+                document.getElementById('firewallCard').style.display = 'block';
+                document.getElementById('firewallCount').textContent = result.firewall_rules.count;
+                firewallRulesData = result.firewall_rules;
+                showFirewallTab(null, 'iptables');
+            }
+
             // Recommendations
             const recsContainer = document.getElementById('recommendations');
             recsContainer.innerHTML = result.recommendations.map(rec => `
@@ -1393,7 +1792,7 @@ Example:
                 </div>
             `).join('');
 
-            // IP Table
+            // IP Table (with NEW FEATURE 3: Risk Breakdown)
             const ipBody = document.getElementById('ipTableBody');
             if (result.suspicious_ips.length > 0) {
                 ipBody.innerHTML = result.suspicious_ips.map(ip => `
@@ -1405,7 +1804,14 @@ Example:
                         <td>${ip.threats}</td>
                         <td>${ip.abuse_score !== undefined ? `<span class="badge ${ip.abuse_score >= 50 ? 'high' : ip.abuse_score >= 20 ? 'medium' : 'low'}">${ip.abuse_score}%</span>` : 'N/A'}</td>
                         <td>${ip.open_ports ? ip.open_ports.slice(0, 5).join(', ') + (ip.open_ports.length > 5 ? '...' : '') : 'N/A'}</td>
-                        <td><span class="badge ${ip.risk_score >= 70 ? 'high' : ip.risk_score >= 30 ? 'medium' : 'low'}">${ip.risk_score >= 70 ? 'High' : ip.risk_score >= 30 ? 'Medium' : 'Low'}</span></td>
+                        <td>
+                            ${ip.score_breakdown ? `
+                                <button class="btn-risk-breakdown" onclick="showRiskBreakdown('${ip.ip}')">
+                                    <span class="badge ${ip.risk_score >= 70 ? 'high' : ip.risk_score >= 30 ? 'medium' : 'low'}">${ip.risk_score}</span>
+                                    <i class="fas fa-info-circle" style="opacity: 0.7;"></i>
+                                </button>
+                            ` : `<span class="badge ${ip.risk_score >= 70 ? 'high' : ip.risk_score >= 30 ? 'medium' : 'low'}">${ip.risk_score >= 70 ? 'High' : ip.risk_score >= 30 ? 'Medium' : 'Low'}</span>`}
+                        </td>
                     </tr>
                 `).join('');
             } else {
@@ -1482,6 +1888,98 @@ Example:
 
             // Scroll to results
             resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // NEW FEATURE 3: Risk Score Breakdown
+        function showRiskBreakdown(ip) {
+            if (!currentAnalysisResults) return;
+            
+            const ipData = currentAnalysisResults.suspicious_ips.find(i => i.ip === ip);
+            if (!ipData || !ipData.score_breakdown) return;
+            
+            const breakdown = ipData.score_breakdown;
+            const modal = document.getElementById('riskBreakdownModal');
+            const content = document.getElementById('riskBreakdownContent');
+            
+            content.innerHTML = `
+                <div style="text-align: center; padding: 1.5rem; background: var(--bg-tertiary); border-radius: 8px; margin-bottom: 1rem;">
+                    <div style="font-size: 2.5rem; font-weight: 700; color: ${breakdown.total >= 70 ? 'var(--danger)' : breakdown.total >= 30 ? 'var(--warning)' : 'var(--success)'};">
+                        ${breakdown.total}
+                    </div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">Total Risk Score for ${ip}</div>
+                </div>
+                
+                ${breakdown.breakdown.map(item => `
+                    <div class="breakdown-item">
+                        <div class="breakdown-icon">
+                            <i class="fas ${item.icon}"></i>
+                        </div>
+                        <div class="breakdown-details">
+                            <div class="breakdown-category">${item.category}</div>
+                            <div class="breakdown-count">Count: ${item.count}</div>
+                        </div>
+                        <div class="breakdown-points">+${item.points}</div>
+                    </div>
+                `).join('')}
+                
+                <div style="padding: 1rem; background: var(--info-bg); border-radius: 8px; margin-top: 1rem;">
+                    <p style="font-size: 0.75rem; margin: 0; color: var(--text-secondary);">
+                        <i class="fas fa-info-circle"></i> <strong>Score Calculation:</strong> 
+                        Brute Force (3 pts each) + Critical (20 pts) + High (10 pts) + Medium (5 pts) + AbuseIPDB Score (×0.3). Max: 100 points.
+                    </p>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+        }
+
+        function closeRiskBreakdown() {
+            document.getElementById('riskBreakdownModal').classList.remove('active');
+        }
+
+        // NEW FEATURE 4: Firewall Rules Functions
+        function showFirewallTab(event, type) {
+            if (!firewallRulesData) return;
+            
+            currentFirewallTab = type;
+            
+            // Update tab states
+            document.querySelectorAll('.firewall-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            if (event) {
+                event.target.classList.add('active');
+            } else {
+                document.querySelector('.firewall-tab').classList.add('active');
+            }
+            
+            // Update content
+            const display = document.querySelector('#firewallRulesDisplay code');
+            display.textContent = firewallRulesData[type] || 'No rules available';
+        }
+
+        function copyFirewallRules() {
+            if (!firewallRulesData) return;
+            
+            const text = firewallRulesData[currentFirewallTab];
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Firewall rules copied to clipboard!', 'success');
+            }).catch(() => {
+                alert('Failed to copy. Please select and copy manually.');
+            });
+        }
+
+        function downloadFirewallRule(type) {
+            if (!firewallRulesData) return;
+            
+            const text = firewallRulesData[type];
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `firewall_rules_${type}.${type === 'fail2ban' ? 'conf' : 'sh'}`;
+            a.click();
+            window.URL.revokeObjectURL(url);
         }
 
         function createCharts(result) {
@@ -1583,16 +2081,6 @@ Example:
         function exportCSV() {
             if (!analysisResults) return;
             
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '/api/export/csv';
-            
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'data';
-            input.value = JSON.stringify(analysisResults);
-            
-            // Use fetch instead for better handling
             fetch('/api/export/csv', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1744,9 +2232,13 @@ Example:
             }
         }
 
-        // Close modal on outside click
+        // Close modals on outside click
         document.getElementById('ipLookupModal').addEventListener('click', (e) => {
             if (e.target.classList.contains('modal-overlay')) closeIpLookup();
+        });
+
+        document.getElementById('riskBreakdownModal').addEventListener('click', (e) => {
+            if (e.target.classList.contains('risk-breakdown-modal')) closeRiskBreakdown();
         });
 
         // Enter key for IP lookup
