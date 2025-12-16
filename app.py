@@ -313,26 +313,42 @@ def check_ip_abuseipdb(ip):
 
 
 def check_ip_ipinfo(ip):
-    """Get IP geolocation from IPInfo"""
+    """Get IP geolocation from IPInfo Lite"""
     if not IPINFO_TOKEN or not is_valid_ip(ip) or is_private_ip(ip):
         return None
     
     try:
-        url = f"https://ipinfo.io/{ip}?token={IPINFO_TOKEN}"
+        # IPInfo Lite API endpoint
+        url = f"https://api.ipinfo.io/lite/{ip}?token={IPINFO_TOKEN}"
         response = requests.get(url, timeout=10)
         
         if response.status_code == 200:
             data = response.json()
-            loc = data.get('loc', '0,0').split(',')
             return {
                 'city': data.get('city', 'Unknown'),
                 'region': data.get('region', 'Unknown'),
-                'country': data.get('country', 'Unknown'),
-                'org': data.get('org', 'Unknown'),
+                'country': data.get('country_code', data.get('country', 'Unknown')),
+                'org': data.get('as_name', data.get('org', 'Unknown')),
                 'timezone': data.get('timezone', 'Unknown'),
-                'latitude': float(loc[0]) if len(loc) > 0 else 0,
-                'longitude': float(loc[1]) if len(loc) > 1 else 0
+                'latitude': 0,
+                'longitude': 0
             }
+        # Fallback to standard endpoint if lite fails
+        elif response.status_code == 404:
+            url = f"https://ipinfo.io/{ip}?token={IPINFO_TOKEN}"
+            response = requests.get(url, timeout=10)
+            if response.status_code == 200:
+                data = response.json()
+                loc = data.get('loc', '0,0').split(',')
+                return {
+                    'city': data.get('city', 'Unknown'),
+                    'region': data.get('region', 'Unknown'),
+                    'country': data.get('country', 'Unknown'),
+                    'org': data.get('org', 'Unknown'),
+                    'timezone': data.get('timezone', 'Unknown'),
+                    'latitude': float(loc[0]) if len(loc) > 0 else 0,
+                    'longitude': float(loc[1]) if len(loc) > 1 else 0
+                }
     except Exception as e:
         print(f"IPInfo error: {e}")
     
@@ -740,6 +756,8 @@ def api_analyze():
         results = analyze_logs(content)
         return jsonify(results)
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         return jsonify({'error': True, 'message': f'Analysis error: {str(e)}'}), 500
 
 
@@ -880,7 +898,17 @@ def not_found(error):
 
 @app.errorhandler(500)
 def internal_error(error):
+    if request.path.startswith('/api/'):
+        return jsonify({'error': True, 'message': 'Internal server error'}), 500
     return jsonify({'error': True, 'message': 'Internal server error'}), 500
+
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    """Handle all unhandled exceptions"""
+    if request.path.startswith('/api/'):
+        return jsonify({'error': True, 'message': str(e)}), 500
+    return jsonify({'error': True, 'message': str(e)}), 500
 
 
 if __name__ == '__main__':
