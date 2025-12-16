@@ -385,20 +385,33 @@ def check_ip_greynoise(ip):
         return None
     
     try:
-        url = f"https://api.greynoise.io/v3/community/{ip}"
+        # GreyNoise v3 API endpoint
+        url = f"https://api.greynoise.io/v3/ip/{ip}"
         headers = {
-            'key': GREYNOISE_API_KEY
+            'key': GREYNOISE_API_KEY,
+            'accept': 'application/json'
         }
         response = requests.get(url, headers=headers, timeout=10)
         
         if response.status_code == 200:
             data = response.json()
+            # Check if IP was found
+            bsi = data.get('business_service_intelligence', {})
             return {
-                'noise': data.get('noise', False),
-                'riot': data.get('riot', False),
-                'classification': data.get('classification', 'unknown'),
-                'name': data.get('name', 'Unknown'),
-                'last_seen': data.get('last_seen', None)
+                'noise': bsi.get('found', False),
+                'riot': data.get('riot', {}).get('found', False),
+                'classification': bsi.get('category', 'unknown'),
+                'name': bsi.get('name', 'Unknown'),
+                'last_seen': bsi.get('last_updated', None)
+            }
+        elif response.status_code == 404:
+            # IP not found in GreyNoise - this is normal for clean IPs
+            return {
+                'noise': False,
+                'riot': False,
+                'classification': 'unknown',
+                'name': 'Not in GreyNoise database',
+                'last_seen': None
             }
     except Exception as e:
         print(f"GreyNoise error: {e}")
