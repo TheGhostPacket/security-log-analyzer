@@ -1,14 +1,15 @@
-# 🔍 Security Log Analyzer
+# 🔍 Security Log Analyzer v2.0
 
 <div align="center">
 
 ![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)
 ![Flask](https://img.shields.io/badge/Flask-2.3.3-green.svg)
 ![Status](https://img.shields.io/badge/Status-Live-brightgreen.svg)
+![APIs](https://img.shields.io/badge/APIs-4%20Sources-purple.svg)
 
-**Detect Security Threats in Server Logs**
+**Advanced Server Log Threat Detection with Multi-Source Intelligence**
 
-Upload your Apache, Nginx, or SSH logs and instantly identify attacks, suspicious IPs, and security vulnerabilities.
+Upload your Apache, Nginx, or SSH logs and instantly identify attacks, suspicious IPs, and security vulnerabilities using threat intelligence from 4 sources.
 
 [🚀 **Live Demo**](https://security-log-analyzer.onrender.com)
 
@@ -18,37 +19,54 @@ Upload your Apache, Nginx, or SSH logs and instantly identify attacks, suspiciou
 
 ## 🎯 What It Does
 
-Upload a log file → We analyze every line → You see exactly who's attacking your server and how.
+Upload a log file → We analyze every line → Check suspicious IPs against 4 threat intelligence sources → You get a comprehensive security report with actionable recommendations.
 
-### Threats Detected
+---
 
-| Threat Type | Description |
-|-------------|-------------|
-| **Brute Force Attacks** | Multiple failed login attempts from same IP |
-| **SQL Injection** | Malicious database queries in URLs |
-| **XSS Attacks** | Script injection attempts |
-| **Path Traversal** | Attempts to access restricted files |
-| **Command Injection** | OS command execution attempts |
-| **Scanner Activity** | Automated vulnerability scanning tools |
-| **Suspicious User Agents** | Known hacking tools (sqlmap, nikto, etc.) |
+## 🛡️ Threat Detection
 
-### Threat Intelligence
+| Category | Threats Detected |
+|----------|-----------------|
+| **Injection Attacks** | SQL Injection, Command Injection, XXE |
+| **Cross-Site Attacks** | XSS, Script Injection |
+| **File Attacks** | LFI/RFI, Path Traversal, Web Shells |
+| **Exploitation** | Log4Shell, WordPress Exploits |
+| **Reconnaissance** | Port Scanning, Directory Enumeration |
+| **Authentication** | Brute Force, Failed Logins |
+| **Tools** | sqlmap, Nikto, DirBuster, Nmap detection |
 
-We check suspicious IPs against:
-- **AbuseIPDB** - Known attacker database with abuse scores
-- **IPInfo** - Geographic location and ISP information
+---
+
+## 🌐 Threat Intelligence Sources
+
+| Source | What It Provides | Free Tier |
+|--------|-----------------|-----------|
+| **AbuseIPDB** | Abuse reports, confidence score, TOR detection | 1,000/day |
+| **IPInfo** | Geolocation, ISP, organization | 50,000/month |
+| **Shodan** | Open ports, vulnerabilities, OS detection | 100/month |
+| **GreyNoise** | Known scanner/bot detection, classification | 100/day |
 
 ---
 
 ## ✨ Features
 
-- **📤 File Upload** - Drag & drop log files up to 10MB
-- **📋 Paste Logs** - Or paste log content directly
+### Analysis
+- **📤 File Upload** - Drag & drop logs up to 20MB
+- **📋 Paste Logs** - Or paste content directly
 - **🔍 Multi-Format Support** - Apache, Nginx, SSH, auth.log
-- **🌍 IP Geolocation** - See where attacks originate
-- **📊 Threat Statistics** - Visual breakdown of attacks
+- **⚡ Real-time Analysis** - Instant results
+
+### Intelligence
+- **🌍 IP Geolocation** - See attack origins on map
+- **📊 Abuse Scoring** - AbuseIPDB confidence scores
+- **🔓 Port Scanning** - Shodan open port detection
+- **🤖 Bot Detection** - GreyNoise scanner identification
+
+### Reporting
+- **📈 Visual Charts** - Severity breakdown, hourly activity
 - **💡 Recommendations** - Actionable security advice
-- **🧪 Sample Logs** - Demo data to test the tool
+- **📥 Export Reports** - Download as CSV or JSON
+- **🔎 IP Lookup Tool** - Check any IP manually
 
 ---
 
@@ -64,9 +82,11 @@ cd security-log-analyzer
 # Install
 pip install -r requirements.txt
 
-# Set API keys (optional but recommended)
+# Set API keys
 export ABUSEIPDB_API_KEY="your_key"
 export IPINFO_TOKEN="your_token"
+export SHODAN_API_KEY="your_key"      # Optional
+export GREYNOISE_API_KEY="your_key"   # Optional
 
 # Run
 python app.py
@@ -76,21 +96,21 @@ python app.py
 
 1. Push to GitHub
 2. Create Web Service on Render
-3. Add environment variables:
-   - `ABUSEIPDB_API_KEY`
-   - `IPINFO_TOKEN`
+3. Add environment variables (see below)
 4. Deploy!
 
 ---
 
-## 🔑 API Keys
+## 🔑 Environment Variables
 
-| Service | Purpose | Get It |
-|---------|---------|--------|
-| **AbuseIPDB** | IP reputation scores | [abuseipdb.com](https://www.abuseipdb.com) |
-| **IPInfo** | IP geolocation | [ipinfo.io](https://ipinfo.io) |
+| Variable | Required | Get It From |
+|----------|----------|-------------|
+| `ABUSEIPDB_API_KEY` | ✅ Yes | [abuseipdb.com](https://www.abuseipdb.com) |
+| `IPINFO_TOKEN` | ✅ Yes | [ipinfo.io](https://ipinfo.io) |
+| `SHODAN_API_KEY` | Optional | [shodan.io](https://account.shodan.io) |
+| `GREYNOISE_API_KEY` | Optional | [greynoise.io](https://www.greynoise.io) |
 
-Both have generous free tiers. The tool works without them but IP intelligence will be limited.
+The tool works without Shodan and GreyNoise, but IP intelligence will be limited.
 
 ---
 
@@ -103,7 +123,7 @@ Both have generous free tiers. The tool works without them but IP intelligence w
 # Apache Common
 192.168.1.1 - - [16/Dec/2025:10:15:32 +0000] "GET /page HTTP/1.1" 200 1234
 
-# Nginx
+# Nginx Access
 192.168.1.1 - - [16/Dec/2025:10:15:32 +0000] "GET /page HTTP/1.1" 200 1234
 
 # SSH Failed Login
@@ -112,39 +132,69 @@ Dec 16 10:15:32 server sshd[1234]: Failed password for admin from 192.168.1.1
 
 ---
 
-## 🎓 Skills Demonstrated
-
-This project showcases:
-
-- **Security Operations** - Understanding of SOC workflows
-- **Log Analysis** - Parsing and pattern detection
-- **Threat Intelligence** - API integration for IP reputation
-- **Incident Response** - Identifying and categorizing attacks
-- **Python Development** - Flask, regex, data processing
-- **API Integration** - Multiple external services
-
----
-
 ## 📸 Sample Output
 
 ```
 🚨 CRITICAL THREATS DETECTED
 
-Threats Found: 47
-Brute Force IPs: 3
-Suspicious IPs: 12
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 Summary
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Lines Analyzed: 15,432
+Threats Found: 127
+Critical: 23
+Unique IPs: 342
+Brute Force IPs: 5
 
-⚠️ Brute Force Attack Detected
-   IP: 185.220.101.45 (Russia)
-   Failed Attempts: 2,847
-   Abuse Score: 100%
-   Action: Block immediately
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚨 Top Suspicious IP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+IP: 185.220.101.45
+Location: 🇷🇺 Russia
+Abuse Score: 100%
+Open Ports: 22, 80, 443
+Known Scanner: Yes (Tor Exit Node)
+Threats: SQL Injection, Brute Force
 
-⚠️ SQL Injection Attempts
-   Count: 156 attempts
-   Source: 45.33.32.156
-   Action: Review input validation
+💡 Action: Block immediately via firewall
 ```
+
+---
+
+## 🎓 Skills Demonstrated
+
+This project showcases:
+
+| Skill | Implementation |
+|-------|---------------|
+| **Security Operations** | Log analysis, threat detection, incident response |
+| **Threat Intelligence** | Multi-source API integration, IP reputation |
+| **Pattern Recognition** | Regex-based attack detection |
+| **Data Visualization** | Chart.js dashboards |
+| **Python Development** | Flask, API integration, data processing |
+| **Web Development** | Responsive UI, real-time updates |
+
+---
+
+## 📝 API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/analyze` | POST | Analyze log file or content |
+| `/api/check-ip` | POST | Check single IP address |
+| `/api/export/csv` | POST | Export results as CSV |
+| `/api/export/json` | POST | Export results as JSON |
+| `/api/sample-logs` | GET | Get sample log data |
+| `/api/status` | GET | Check API connectivity |
+
+---
+
+## 🔒 Privacy
+
+- Log files are processed in memory only
+- No logs are stored on the server
+- Only suspicious public IPs are checked against APIs
+- Private/internal IPs are never sent to external services
 
 ---
 
@@ -157,4 +207,10 @@ Suspicious IPs: 12
 
 ---
 
-*For educational and authorized security research only*
+## 📜 License
+
+MIT License - For educational and authorized security research only.
+
+---
+
+*Built with ❤️ for the cybersecurity community*
