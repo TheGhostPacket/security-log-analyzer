@@ -741,33 +741,41 @@ def index():
 @app.route('/api/analyze', methods=['POST'])
 def api_analyze():
     """Analyze uploaded log file"""
-    
-    if 'file' in request.files:
-        file = request.files['file']
-        if file.filename == '':
-            return jsonify({'error': True, 'message': 'No file selected'}), 400
-        
-        try:
-            content = file.read().decode('utf-8', errors='ignore')
-        except Exception as e:
-            return jsonify({'error': True, 'message': f'Error reading file: {str(e)}'}), 400
-    
-    elif request.is_json:
-        data = request.get_json()
-        content = data.get('content', '')
-    
-    else:
-        return jsonify({'error': True, 'message': 'No log data provided'}), 400
-    
-    if not content or len(content.strip()) == 0:
-        return jsonify({'error': True, 'message': 'Log file is empty'}), 400
-    
-    if len(content) > 20 * 1024 * 1024:  # 20MB limit
-        return jsonify({'error': True, 'message': 'File too large (max 20MB)'}), 400
-    
     try:
+        content = None
+        
+        if 'file' in request.files:
+            file = request.files['file']
+            if file.filename == '':
+                return jsonify({'error': True, 'message': 'No file selected'}), 400
+            
+            try:
+                content = file.read().decode('utf-8', errors='ignore')
+            except Exception as e:
+                return jsonify({'error': True, 'message': f'Error reading file: {str(e)}'}), 400
+        
+        elif request.is_json:
+            data = request.get_json()
+            if data:
+                content = data.get('content', '')
+        
+        elif request.content_type and 'json' in request.content_type:
+            try:
+                data = request.get_json(force=True)
+                if data:
+                    content = data.get('content', '')
+            except:
+                pass
+        
+        if not content or len(content.strip()) == 0:
+            return jsonify({'error': True, 'message': 'No log data provided'}), 400
+        
+        if len(content) > 20 * 1024 * 1024:  # 20MB limit
+            return jsonify({'error': True, 'message': 'File too large (max 20MB)'}), 400
+        
         results = analyze_logs(content)
         return jsonify(results)
+        
     except Exception as e:
         import traceback
         traceback.print_exc()
