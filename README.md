@@ -203,7 +203,6 @@ This project showcases:
 **TheGhostPacket**
 - Portfolio: [theghostpacket.com](https://theghostpacket.com)
 - GitHub: [@TheGhostPacket](https://github.com/TheGhostPacket)
-- LinkedIn: [Nhyira Yanney](https://linkedin.com/in/nhyira-yanney-b19898178)
 
 ---
 
